@@ -7,165 +7,7 @@ using iTunesLib;
 
 namespace iTunesLibrary
 {
-    public enum RatingPredicate
-    {
-        EqualTo,
-        LessThan,
-        LessThanOrEqualTo,
-        GreaterThan,
-        GreaterThanOrEqualTo
-    }
-
-    public class Song
-    {
-        private readonly IITTrack Track;
-
-        public Song(IITTrack Track)
-        {
-            this.Track = Track;
-        }
-
-        //
-        // Needed for serialization.
-        //
-        public Song()
-        {
-        }
-
-        public override string ToString()
-        {
-            return String.Format("Song: Name ==> {0}, Album ==> {1}, Length ==> {2}", Name, Album, Length);
-        }
-
-        public string Artist
-        {
-            get
-            {
-                return Track.Artist;
-            }
-        }
-
-        public string Album
-        {
-            get
-            {
-                return Track.Album;
-            }
-        }
-
-        public string Name
-        {
-            get
-            {
-                return Track.Name;
-            }
-        }
-
-        public uint LengthInSeconds
-        {
-            get
-            {
-                return (uint)Track.Duration;
-            }
-        }
-
-        public string Length
-        {
-            get
-            {
-                StringBuilder sb = new StringBuilder();
-
-                uint SongLength = LengthInSeconds;
-                while (SongLength != 0)
-                {
-                    sb.Insert(0, SongLength % 60);
-                    SongLength /= 60;
-                    if (SongLength != 0)
-                    {
-                        sb.Insert(0, ":");
-                    }
-                }
-
-                return sb.ToString();
-            }
-        }
-
-        public string Location
-        {
-            get
-            {
-                IITFileOrCDTrack FileTrack = Track as IITFileOrCDTrack;
-                if (FileTrack == null)
-                {
-                    return "";
-                }
-                else
-                {
-                    return FileTrack.Location;
-                }
-            }
-        }
-    }
-
-    public class Playlist
-    {
-        private readonly IITPlaylist _Playlist;
-        public List<Song> SongList = null;
-
-        public Playlist(IITPlaylist Playlist)
-        {
-            _Playlist = Playlist;
-        }
-
-        public string Name
-        {
-            get
-            {
-                return _Playlist.Name;
-            }
-        }
-
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            sb.AppendFormat("Playlist: {0}\n", _Playlist.Name);
-            Song[] SongList = Songs;
-
-            uint i = 1;
-            foreach (Song s in SongList)
-            {
-                sb.AppendFormat("({0}) {1} - {2}\n", i, s.Album, s.Name);
-                i += 1;
-            }
-
-            return sb.ToString();
-        }
-
-        public Song[] Songs
-        {
-            get
-            {
-                if (SongList == null)
-                {
-                    SongList = new List<Song>();
-
-                    foreach (IITTrack Track in _Playlist.Tracks)
-                    {
-                        if (Track.Kind == ITTrackKind.ITTrackKindFile)
-                        {
-                            IITFileOrCDTrack FileTrack = (IITFileOrCDTrack)Track;
-
-                            SongList.Add(new Song(Track));
-                        }
-                    }
-                }
-
-                return SongList.ToArray();
-            }
-        }
-    }
-
+    // TODO -- Describe why we have this class.
     internal class SongPlayingCallbackWrapper
     {
         public Library.SongChangedCallback ExternalCallback;
@@ -181,19 +23,14 @@ namespace iTunesLibrary
         }
     }
 
-    public class Library
+    public static class Library // TODO -- Rename?
     {
-        private readonly iTunesApp app;
-        private List<SongPlayingCallbackWrapper> WrapperList = new List<SongPlayingCallbackWrapper>();
+        private static readonly iTunesApp app = new iTunesApp();
+        private static readonly List<SongPlayingCallbackWrapper> WrapperList = new List<SongPlayingCallbackWrapper>();
 
         public delegate void SongChangedCallback(Song s);
 
-        public Library()
-        {
-            app = new iTunesApp();
-        }
-
-        public Song[] GetSongsFromAlbum(string AlbumName)
+        public static Song[] GetSongsFromAlbum(string AlbumName) // TODO
         {
             List<Song> SongList = new List<Song>();
             IITPlaylist Playlist = app.LibrarySource.Playlists.get_ItemByName("Library");
@@ -215,7 +52,73 @@ namespace iTunesLibrary
             return SongList.ToArray();
         }
 
-        public Song[] GetSongsByArtist(string ArtistName)
+        public static Artist[] Artists
+        {
+            get
+            {
+                IITPlaylist Playlist = app.LibrarySource.Playlists.get_ItemByName("Library");
+                Dictionary<string, bool> ArtistHash = new Dictionary<string, bool>();
+
+                foreach (IITTrack Track in Playlist.Tracks)
+                {
+                    if (Track.Kind != ITTrackKind.ITTrackKindFile)
+                    {
+                        continue;
+                    }
+
+                    IITFileOrCDTrack FileTrack = (IITFileOrCDTrack)Track;
+                    ArtistHash[Track.Artist] = true;
+                }
+
+                return ArtistHash.Keys.Select((name) => new Artist(name)).ToArray();
+            }
+        }
+
+        public static Album[] Albums
+        {
+            get
+            {
+                IITPlaylist Playlist = app.LibrarySource.Playlists.get_ItemByName("Library");
+                Dictionary<Tuple<string, string>, bool> AlbumHash = new Dictionary<Tuple<string, string>, bool>();
+
+                foreach (IITTrack Track in Playlist.Tracks)
+                {
+                    if (Track.Kind != ITTrackKind.ITTrackKindFile)
+                    {
+                        continue;
+                    }
+
+                    IITFileOrCDTrack FileTrack = (IITFileOrCDTrack)Track;
+                    AlbumHash[new Tuple<string, string>(FileTrack.Artist, FileTrack.Album)] = true;
+                }
+
+                return AlbumHash.Keys.Select((tuple) => new Album(new Artist(tuple.Item1), tuple.Item2)).ToArray();
+            }
+        }
+
+        public static Song[] Songs // IEnumerable?
+        {
+            get 
+            {
+                IITPlaylist Playlist = app.LibrarySource.Playlists.get_ItemByName("Library");
+                List<Song> SongList = new List<Song>();
+
+                foreach (IITTrack Track in Playlist.Tracks)
+                {
+                    if (Track.Kind != ITTrackKind.ITTrackKindFile)
+                    {
+                        continue;
+                    }
+
+                    IITFileOrCDTrack FileTrack = (IITFileOrCDTrack)Track;
+                    SongList.Add(new Song(Track));
+                }
+
+                return SongList.ToArray();
+            }
+        }
+
+        public static Song[] GetSongsByArtist(string ArtistName) // TODO
         {
             IITPlaylist Playlist = app.LibrarySource.Playlists.get_ItemByName("Library");
             List<Song> SongList = new List<Song>();
@@ -237,54 +140,18 @@ namespace iTunesLibrary
             return SongList.ToArray();
         }
 
-        public Playlist GetPlaylist(string PlaylistName)
+        public static IEnumerable<Playlist> Playlists
         {
-            return new Playlist(app.LibrarySource.Playlists.get_ItemByName(PlaylistName));
-        }
-
-        public Song[] GetSongsByRating(int RatingValue, RatingPredicate Predicate)
-        {
-            IITPlaylist Playlist = app.LibrarySource.Playlists.get_ItemByName("Library");
-            List<Song> SongList = new List<Song>();
-
-            foreach (IITTrack Track in Playlist.Tracks)
+            get
             {
-                if (Track.Kind == ITTrackKind.ITTrackKindFile)
+                foreach (IITPlaylist Playlist in app.LibrarySource.Playlists)
                 {
-                    IITFileOrCDTrack FileTrack = (IITFileOrCDTrack)Track;
-                    int Rating = FileTrack.Rating / 20; // TODO -- This is using the "stars" metric.
-                    bool ShouldCopy = false;
-
-                    switch (Predicate)
-                    {
-                        case RatingPredicate.EqualTo:
-                            ShouldCopy = (Rating == RatingValue);
-                            break;
-                        case RatingPredicate.GreaterThan:
-                            ShouldCopy = (Rating > RatingValue);
-                            break;
-                        case RatingPredicate.GreaterThanOrEqualTo:
-                            ShouldCopy = (Rating >= RatingValue);
-                            break;
-                        case RatingPredicate.LessThan:
-                            ShouldCopy = (Rating < RatingValue);
-                            break;
-                        case RatingPredicate.LessThanOrEqualTo:
-                            ShouldCopy = (Rating <= RatingValue);
-                            break;
-                    }
-
-                    if (ShouldCopy)
-                    {
-                        SongList.Add(new Song(Track));
-                    }
+                    yield return new Playlist(Playlist);
                 }
             }
-
-            return SongList.ToArray();
         }
 
-        public bool Muted
+        public static bool Muted
         {
             get
             {
@@ -297,7 +164,7 @@ namespace iTunesLibrary
             }
         }
 
-        public Song CurrentSong
+        public static Song CurrentSong
         {
             get
             {
@@ -308,17 +175,11 @@ namespace iTunesLibrary
                     return null;
                 }
 
-                app.OnPlayerPlayEvent += app_OnPlayerPlayEvent;
                 return new Song(Track);
             }
         }
 
-        private void app_OnPlayerPlayEvent(object iTrack)
-        {
-            throw new NotImplementedException();
-        }
-
-        public event SongChangedCallback TrackChanged
+        public static event SongChangedCallback TrackChanged
         {
             add
             {

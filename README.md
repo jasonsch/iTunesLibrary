@@ -1,4 +1,4 @@
 iTunesLibrary
 =======
 
-C# wrapper around the iTunes COM objects.
+C# wrapper around the iTunes COM library.

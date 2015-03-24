@@ -9,8 +9,8 @@ namespace iTunesLibrary
 {
     public class Album : IEnumerable<Song>
     {
-        public string Name { get; internal set; }
-        public Artist Artist { get; internal set; }
+        public string Name { get; private set; }
+        public Artist Artist { get; private set; }
 
         internal Album(Artist Artist, string Name)
         {

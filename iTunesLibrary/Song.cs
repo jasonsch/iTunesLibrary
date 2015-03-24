@@ -21,21 +21,19 @@ namespace iTunesLibrary
             return String.Format("{0} - {1} by {2}", Album, Name, Artist);
         }
 
-        // TODO -- Return an Artist object.
-        public string Artist
+        public Artist Artist
         {
             get
             {
-                return Track.Artist;
+                return new Artist(Track.Artist);
             }
         }
 
-        // TODO -- Return an Album object.
-        public string Album
+        public Album Album
         {
             get
             {
-                return Track.Album;
+                return new Album(Artist, Track.Album);
             }
         }
 

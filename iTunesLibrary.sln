@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaylistCopy", "PlaylistCopy\PlaylistCopy.csproj", "{13FAF6F2-8C28-4F10-8644-AAC45A9B3BC3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample Code", "Sample Code", "{85FCA9D7-0AF5-4E4D-BFC8-EB307A945782}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,5 +31,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{13FAF6F2-8C28-4F10-8644-AAC45A9B3BC3} = {85FCA9D7-0AF5-4E4D-BFC8-EB307A945782}
 	EndGlobalSection
 EndGlobal

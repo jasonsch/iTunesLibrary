@@ -22,9 +22,6 @@ namespace PlaylistCopy
 
             if (!Directory.Exists(args[1]))
             {
-                //
-                // TODO -- Error handling.
-                //
                 Directory.CreateDirectory(args[1]);
             }
 
@@ -33,12 +30,8 @@ namespace PlaylistCopy
 
         private static void CopyPlaylist(string PlaylistName, string Destination)
         {
-            Library lib = new Library();
-            Playlist Playlist = lib.GetPlaylist(PlaylistName);
+            Playlist Playlist = Library.Playlists.SingleOrDefault(p => p.Name == PlaylistName);
 
-            //
-            // TODO -- This never hits.
-            //
             if (Playlist == null)
             {
                 PrintUsage(String.Format("Couldn't find playlist {0}", PlaylistName));

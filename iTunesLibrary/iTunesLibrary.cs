@@ -34,7 +34,7 @@ namespace iTunesLibrary
 
         public override string ToString()
         {
-            return String.Format("Song: Name ==> {0}, Album ==> {1}, Length ==> {2}", Name, Album, Length);
+            return String.Format("Song: Name ==> {0}, Album ==> {1}, Length ==> {2}, Location ==> {3}", Name, Album, Length, Location);
         }
 
         public string Artist

@@ -109,5 +109,12 @@ namespace iTunesLibrary
             }
         }
 
+        public DateTime DateAdded
+        {
+            get
+            {
+                return Track.DateAdded;
+            }
+        }
     }
 }

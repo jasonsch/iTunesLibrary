@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using iTunesLibrary;
+using Mono.Options;
 
 namespace PlaylistCopy
 {
@@ -12,23 +13,30 @@ namespace PlaylistCopy
     {
         static void Main(string[] args)
         {
+            OptionSet options = new OptionSet();
+            Int32 DayCount = Int32.MaxValue;
+
+            options.Add("numberofdays=", value => DayCount = Int32.Parse(value));
+
+
+            List<string> RemainingArgs = options.Parse(args);
             //
             // Validate args
             //
-            if (args.Length != 2)
+            if (RemainingArgs.Count != 2)
             {
                 PrintUsage("Wrong number of arguments!");
             }
 
-            if (!Directory.Exists(args[1]))
+            if (!Directory.Exists(RemainingArgs[1]))
             {
-                Directory.CreateDirectory(args[1]);
+                Directory.CreateDirectory(RemainingArgs[1]);
             }
 
-            CopyPlaylist(args[0], args[1]);
+            CopyPlaylist(RemainingArgs[0], RemainingArgs[1], DayCount);
         }
 
-        private static void CopyPlaylist(string PlaylistName, string Destination)
+        private static void CopyPlaylist(string PlaylistName, string Destination, int DayCount)
         {
             Playlist Playlist = Library.Playlists.SingleOrDefault(p => p.Name == PlaylistName);
 
@@ -39,7 +47,10 @@ namespace PlaylistCopy
 
             foreach (Song Song in Playlist.Songs)
             {
-                CopySong(Song, Destination);
+                if ((DateTime.Now - Song.DateAdded).TotalDays < DayCount)
+                {
+                    CopySong(Song, Destination);
+                }
             }
         }
 
@@ -75,7 +86,7 @@ namespace PlaylistCopy
         private static void PrintUsage(string ErrorString)
         {
             System.Console.WriteLine("Error: {0}", ErrorString);
-            System.Console.WriteLine("Usage: PlaylistCopy <Playlist name> <Destination directory>");
+            System.Console.WriteLine("Usage: PlaylistCopy [-numberofdays=<age of songs in days to copy>] <Playlist name> <Destination directory>");
             System.Environment.Exit(0);
         }
     }

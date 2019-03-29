@@ -25,6 +25,13 @@ namespace iTunesLibrary
             }
         }
 
+        public void AddSong(string FilePath)
+        {
+            IITLibraryPlaylist Playlist = _Playlist as IITLibraryPlaylist;
+
+            Playlist.AddFile(FilePath);
+        }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
@@ -41,7 +48,7 @@ namespace iTunesLibrary
             return sb.ToString();
         }
 
-        public Song[] Songs
+        public List<Song> Songs
         {
             get
             {
@@ -55,12 +62,12 @@ namespace iTunesLibrary
                         {
                             IITFileOrCDTrack FileTrack = (IITFileOrCDTrack)Track;
 
-                            SongList.Add(new Song(Track));
+                            SongList.Add(Library.SongFromTrack(Track));
                         }
                     }
                 }
 
-                return SongList.ToArray();
+                return SongList;
             }
         }
 

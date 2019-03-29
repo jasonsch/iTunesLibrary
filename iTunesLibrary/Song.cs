@@ -11,31 +11,22 @@ namespace iTunesLibrary
     {
         private readonly IITTrack Track;
 
-        internal Song(IITTrack Track)
+        internal Song(IITTrack Track, Artist Artist, Artist AlbumArtist, Album Album)
         {
             this.Track = Track;
+            this.Artist = Artist;
+            this.AlbumArtist = AlbumArtist;
+            this.Album = Album;
         }
 
         public override string ToString()
         {
-            return String.Format("{0} - {1} by {2}", Album, Name, Artist);
+            return String.Format("{0} - {1} by {2}", Album, Name, this.AlbumArtist.Name);
         }
 
-        public Artist Artist
-        {
-            get
-            {
-                return new Artist(Track.Artist);
-            }
-        }
-
-        public Album Album
-        {
-            get
-            {
-                return new Album(Artist, Track.Album);
-            }
-        }
+        public Artist AlbumArtist { get; private set; }
+        public Artist Artist { get; private set; }
+        public Album Album { get; private set; }
 
         public string Name
         {

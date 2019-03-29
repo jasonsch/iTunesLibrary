@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using iTunesLib;
 
 namespace iTunesLibrary
 {
@@ -11,34 +9,51 @@ namespace iTunesLibrary
         /// <summary>
         /// The artist's name.
         /// </summary>
-        public string Name { get; internal set; }
+        public string Name { get; private set; }
 
         internal Artist(string name)
         {
             this.Name = name;
         }
 
-        public Song[] Songs
+        public List<Song> Songs
         {
             get
             {
-                return new Song[] { }; // TODO
+                List<Song> SongList = new List<Song>();
+
+                foreach (Album album in Albums)
+                {
+                    foreach (Song song in album)
+                    {
+                        SongList.Add(song);
+                    }
+                }
+
+                return SongList;
+            }
+        }
+        public List<Album> Albums { get; } = new List<Album>();
+
+        public List<Playlist> Playlists
+        {
+            get
+            {
+                // TODO
+                return Library.GetPlaylistsFromArtist(this);
             }
         }
 
-        public Album[] Albums
+        public override string ToString()
         {
-            get
-            {
-                return new Album[] { }; // TODO
-            }
+            return Name;
         }
 
-        public Playlist[] Playlists
+        internal void AddAlbum(Album album)
         {
-            get
+            if (!Albums.Contains(album))
             {
-                return new Playlist[] { }; // TODO
+                Albums.Add(album);
             }
         }
     }

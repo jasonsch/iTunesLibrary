@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iTunesLibrary", "iTunesLibrary\iTunesLibrary.csproj", "{06ECB911-9E8C-4A1D-9ABA-440AA0DA75B3}"
 EndProject
@@ -13,6 +13,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlaylistCopy", "PlaylistCopy\PlaylistCopy.csproj", "{13FAF6F2-8C28-4F10-8644-AAC45A9B3BC3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sample Code", "Sample Code", "{85FCA9D7-0AF5-4E4D-BFC8-EB307A945782}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iTunesShell", "iTunesShell\iTunesShell.csproj", "{F4AFD069-21E4-4DE9-92E0-7948F0023FD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "iTunesCli", "iTunesCli\iTunesCli.csproj", "{F68C7556-0280-4EDD-8F5A-627BDEC94557}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,11 +32,22 @@ Global
 		{13FAF6F2-8C28-4F10-8644-AAC45A9B3BC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13FAF6F2-8C28-4F10-8644-AAC45A9B3BC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13FAF6F2-8C28-4F10-8644-AAC45A9B3BC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4AFD069-21E4-4DE9-92E0-7948F0023FD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4AFD069-21E4-4DE9-92E0-7948F0023FD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4AFD069-21E4-4DE9-92E0-7948F0023FD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4AFD069-21E4-4DE9-92E0-7948F0023FD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F68C7556-0280-4EDD-8F5A-627BDEC94557}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F68C7556-0280-4EDD-8F5A-627BDEC94557}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F68C7556-0280-4EDD-8F5A-627BDEC94557}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F68C7556-0280-4EDD-8F5A-627BDEC94557}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{13FAF6F2-8C28-4F10-8644-AAC45A9B3BC3} = {85FCA9D7-0AF5-4E4D-BFC8-EB307A945782}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D9294B85-2899-4252-A257-5644AB7B3DA9}
 	EndGlobalSection
 EndGlobal

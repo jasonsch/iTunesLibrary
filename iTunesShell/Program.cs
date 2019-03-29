@@ -119,9 +119,29 @@ namespace iTunesShell
             List<IMetaData> Files = Context.GetItems(ref EnumerationContext, int.MaxValue, Operands[1]); // TODO -- Do pages and also need to verify Operands[1]
             foreach (var File in Files)
             {
-                // TODO
-                // System.IO.File.Copy(File.FileName, Operands[2]);
-                Console.WriteLine($"System.IO.File.Copy('{File.FileName}', '{Operands[2]}')");
+                Console.WriteLine($"Copying '{File.FileName}' to '{Operands[2]}'");
+
+                if (File.FileName == null)
+                {
+                    //
+                    // This can happen if the file was deleted out from under itunes.
+                    //
+                    Console.WriteLine($"ERROR: File {File.LongDescription} is missing!");
+                    continue;
+                }
+
+                string DestinationFile = System.IO.Path.Combine(Operands[2], System.IO.Path.GetFileName(File.FileName));
+
+                if (System.IO.File.Exists(DestinationFile))
+                {
+                    // TODO -- Warn in verbose mode.
+                    continue;
+                }
+
+                //
+                // TODO -- Mirror directory structure (flag?)
+                //
+                System.IO.File.Copy(File.FileName, DestinationFile);
             }
         }
 

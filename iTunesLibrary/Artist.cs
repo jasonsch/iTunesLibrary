@@ -35,18 +35,9 @@ namespace iTunesLibrary
         }
         public List<Album> Albums { get; } = new List<Album>();
 
-        public List<Playlist> Playlists
-        {
-            get
-            {
-                // TODO
-                return Library.GetPlaylistsFromArtist(this);
-            }
-        }
-
         public override string ToString()
         {
-            return Name;
+            return $"{Name} - {Albums.Count} Album(s)";
         }
 
         internal void AddAlbum(Album album)

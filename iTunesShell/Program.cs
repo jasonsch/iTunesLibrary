@@ -4,6 +4,7 @@ using System.Text;
 using iTunesShell.Interfaces;
 using iTunesShell.Models;
 using iTunesLibrary;
+using Mono.Options;
 
 namespace iTunesShell
 {
@@ -13,16 +14,25 @@ namespace iTunesShell
 
         static void Main(string[] args)
         {
+            OptionSet Options = new OptionSet();
             Context = new RootDirectoryContext();
+            string CommandToRun = null;
+            string CommandFileName = null;
 
-            if (args.Length != 0)
+            Options.Add("c|command=", value => CommandToRun = value);
+            Options.Add("f|file=", value => CommandFileName = value);
+
+            Options.Parse(args);
+
+            if (CommandToRun != null)
             {
-                if (args.Length == 1)
+                ProcessCommand(CommandToRun);
+            }
+            else if (CommandFileName != null)
+            {
+                foreach (string Line in System.IO.File.ReadAllLines(args[0]))
                 {
-                    foreach (string Line in System.IO.File.ReadAllLines(args[0]))
-                    {
-                        ProcessCommand(Line);
-                    }
+                    ProcessCommand(Line);
                 }
             }
             else
@@ -161,3 +171,4 @@ namespace iTunesShell
         }
     }
 }
+
